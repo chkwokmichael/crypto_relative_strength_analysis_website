@@ -1,1 +1,1 @@
-# crypto_relative_strength_analysis_website
+# Crypto Relative Strength Analysis Website
