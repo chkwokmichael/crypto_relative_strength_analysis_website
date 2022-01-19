@@ -1,0 +1,80 @@
+* {
+	font-size: 100%;
+	font-family: 'Roboto', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: Noto Sans;
+	font-weight: 600;
+	font-size: 200%;
+} 
+
+td {
+	padding: 0.5rem 0.3rem;
+}
+
+.dotted-line {
+	margin: 2rem 0rem;
+	border-top: dotted 1px;
+}
+
+.sections-title {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.navbar-custom {
+	text-align: center;
+	background: #14143e;
+	padding: 1rem;
+	color: white;
+}
+
+.crypto-col {
+	height: 100%;
+}
+
+.crypto-card {
+	margin: 3rem;
+}
+
+.coin-title {
+	display: flex;
+	flex-direction: row;
+	font-size: 30px;
+	vertical-align: center;
+}
+
+.coin-logo {
+	height: 30px;
+	width: 30px;
+	margin: 0rem 0.5rem;
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+	border-bottom-right-radius: 12px;
+	border-bottom-left-radius: 12px;
+}
+
+.coin-details {
+	width: 100%;
+	margin: 1.5rem 0rem;
+	align-items: center;
+}
+
+.card-text {
+	font-weight: bold !important;
+}
+
+footer {
+	background: grey;
+	text-align: center;
+	color: white;
+	margin-top: 2rem;
+	padding: 1rem 0rem;
+}
+
+.contact {
+	margin-bottom: 1rem;
+}
+
+

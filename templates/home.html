@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Flask CSS -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+  
+  <!-- Required CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Roboto&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+  <title>Crypto RS Analysis</title>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	
+	<header>
+    <div class="container-fluid navbar-custom">
+      <h1 id='heading'>🚀 Cryptocurrency Relative Strength Analysis</h1> 
+    </div>
+  </header>
+
+  <div class="ml-container mx-auto justify-content-center mt-3" style="width: 95%;">
+    <p>Hi, welcome to the Cryptocurrency Relative Strength Analysis website!</p>
+
+    <p>This webiste is created to serve as a better tool to provide insights for myself regarding the crypto market. An alert will be sent to my personal email if there's any sharp change in BTC price.</p>
+
+    <p>This website also shows the price performance of the remaining 99 coins by market cap in the past 1 hour. The list can be sorted by Market Cap, Percentage change in price in the past hour, or the trading volumn in the last 24 hours.</p>
+  </div>
+
+  <div class="container mt-4 my-auto">
+    <div class="card crypto-col shadow">
+      <div class="card-body">
+        <div class="coin-title" style="text-align: center">
+          <img class="coin-logo" src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png">
+          <h4 class="card-title">Bitcoin</h4>
+        </div>
+        <div class="coin-details">
+          <table class="w-100">
+            <tr>
+              <td>Price:</td><td><p class="card-text">{{"{:.2f}".format(btc['price'])}}</p></td>
+              <td>% (1h):</td><td><p class="card-text" style="{{'color: red' if btc['percent_change_1h'] < 0 else 'color: green' }}">{{"{:.2f}".format(btc['percent_change_1h'])}}</p></td>
+            </tr>
+            <tr>
+              <td>Volumn (24h):</td><td><p class="card-text">{{"{:.2f}M".format(btc['volume_24h']/1000000)}}</p></td>
+              <td>Market Cap:</td><td><p class="card-text">{{"{:.2f}M".format(btc['market_cap']/1000000)}}</p></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="dotted-line">
+
+  <div class="container-fluid" style='width: 95%'>
+   
+    <div class="text-center"> 
+      <div class="align-middle h-100">
+        <p>Last edit: {{ last_updated }}</p>
+      </div>
+      <div>
+        <p>Sort by: </p>
+        <div class="btn-group">
+          <a href="{{ url_for('home') }}" class="btn btn-outline-secondary btn-sm {{'active' if sorted_by == 'market_cap'}}" role="button">Market Cap</a>
+          <a href="{{ url_for('sorted_perc_change') }}" class="btn btn-outline-secondary btn-sm {{'active' if sorted_by == 'percent_change_1h'}}" role="button">% (1h)</a>
+          <a href="{{ url_for('sorted_volume') }}" class="btn btn-outline-secondary btn-sm {{'active' if sorted_by == 'volume_24h'}}" role="button">Volumn (24h)</a>
+        </div>
+      </div>
+    </div>
+
+    {% set count = namespace(value=0) %}
+    {% for index,values in df.iterrows() %}
+      {% if count.value%3 == 0 %}
+        <div class="row">
+      {% endif %}
+          <div class="col mt-4 crypto-col">
+              <div class="card h-100 shadow">
+                <div class="card-body">
+                  <div class="coin-title">
+                    <h4>{{"{}.".format(count.value+1)}}</h4>
+                    <img class="coin-logo" src="https://s2.coinmarketcap.com/static/img/coins/64x64/{{values['id'] | int }}.png">
+                    <h4 class="card-title">{{"{}".format(index)}}</h4>
+                  </div>
+                  
+                  <div class="coin-details">
+                    <table class="w-100">
+                      <tr>
+                        <td>Price:</td><td><p class="card-text">{{"${:.2f}".format(values['price'])}}</p></td>
+                        <td>% (1h):</td><td><p class="card-text" style="{{'color: red' if values['percent_change_1h'] < 0 else 'color: green' }}">{{"{:.2f}%".format(values['percent_change_1h'])}}</p></td>
+                      </tr>
+                      <tr>
+                        <td>Volumn (24h):</td><td><p class="card-text">{{"${:.2f}M".format(values['volume_24h']/1000000)}}</p></td>
+                        <td>Market Cap:</td><td><p class="card-text">{{"${:.2f}M".format(values['market_cap']/1000000)}}</p></td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% if count.value%3 == 2 %}
+          </div>
+          {% endif %}
+        {% set count.value = count.value + 1 %}
+      {% endfor %}
+  </div>
+
+  <footer class="footer">
+    <div class="contact">
+      <h1 class="sections-title">Contact Me</h1>
+          <div class="row d-flex justify-content-center">
+            <div class="co col-sm-3">
+              <i class="fas fa-phone contact-img"></i> +852 66864829 / +44 0 7429120919
+            </div>
+            <div class="col col-sm-3">
+              <i class="fas fa-envelope contact-img"></i> chkwokmichael@gmail.com
+            </div>
+            <div class="col col-sm-3">
+              <i class="fab fa-linkedin contact-img"></i> Michael (Chin Hung) Kwok
+            </div>
+          </div>
+
+        </div>
+      </section>
+    <div class="container">
+      <span>Copyright © 2022 Michael Kwok</span>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="../js/bootstrap.js"></script>
+</body>
+</html>
