@@ -78,8 +78,8 @@ def get_latest_price(CMC_API_KEYS, quote_list):
     last_updated = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Email Notification if BTC price drops by 5% in an hour
-    # if df.loc['Bitcoin','percent_change_1h'] < -5:
-    if True:
+    if df.loc['Bitcoin','percent_change_1h'] < -5:
+    # if True:
         email_notification(smtp_server,sender_email,password,receiver_emails,data)
     
     return df
