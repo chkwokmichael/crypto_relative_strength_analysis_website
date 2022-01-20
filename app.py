@@ -29,8 +29,8 @@ quote_list = ['price','percent_change_1h','volume_24h','market_cap']
 smtp_server = "smtp.gmail.com"
 sender_email = "cryptorsanalysis@gmail.com"
 password = "Crypto100RS"
-# receiver_emails = ["fungchunhei1234+testing@gmail.com","freemankwokchinhung+testing@gmail.com"]
-receiver_emails = ["freemankwokchinhung+testing@gmail.com"]
+receiver_emails = ["fungchunhei1234+testing@gmail.com","freemankwokchinhung+testing@gmail.com"]
+# receiver_emails = ["freemankwokchinhung+testing@gmail.com"]
 
 # Functions
 def get_latest_price(CMC_API_KEYS, quote_list):
@@ -78,10 +78,11 @@ def get_latest_price(CMC_API_KEYS, quote_list):
     last_updated = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Email Notification if BTC price drops by 5% in an hour
-    if df.loc['Bitcoin','percent_change_1h'] < -5:
+    # if df.loc['Bitcoin','percent_change_1h'] < -5:
+    if True:
         email_notification(smtp_server,sender_email,password,receiver_emails,data)
     
-    return True
+    return df
 
 def email_notification(smtp_server,sender_email,password,receiver_emails,data=False):
 
@@ -141,7 +142,7 @@ atexit.register(lambda: scheduler.shutdown())
 def home():
     # get_latest_price(CMC_API_KEYS,quote_list)
     global df
-    df = pd.read_csv('price.csv',index_col=0)
+    df = get_latest_price(CMC_API_KEYS,quote_list)
     df_btc = df.loc['Bitcoin',:]
     df.drop('Bitcoin',inplace=True)
     return render_template('home.html',df=df,btc=df_btc,last_updated=last_updated,sorted_by='market_cap')
