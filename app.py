@@ -82,7 +82,7 @@ def get_latest_price(CMC_API_KEYS, quote_list):
     
     return df
 
-def email_notification(smtp_server,sender_email,password,receiver_emails,data):
+def email_notification(smtp_server,sender_email,password,receiver_emails,df):
 
     port = 587  # For starttls
 
@@ -94,7 +94,7 @@ def email_notification(smtp_server,sender_email,password,receiver_emails,data):
     --------------------------------------------------------------
     Top performing coins:
 
-    """.format(df.loc['Bitcoint','percent_change_1h'])
+    """.format(df.loc['Bitcoin','percent_change_1h'])
 
     s = ""
     for index, (token,values) in enumerate(df.drop('Bitcoin').sort_values('percent_change_1h',ascending=False)[:10].iterrows()):
