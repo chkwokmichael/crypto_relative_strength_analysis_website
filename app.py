@@ -87,7 +87,9 @@ def email_notification(smtp_server,sender_email,password,receiver_emails,df):
     port = 587  # For starttls
 
     message = """\
-    Subject: [Alert] BTC has dropped {:.2f}% within the past hour.
+    [Alert] BTC has dropped {:.2f}% within the past hour.
+
+    BTC has dropped {0:.2f}% within the past hour.
 
     Your alert for Crypto Relative Strength Analysis has been triggered. Please visit xxx for more information.
 
