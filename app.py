@@ -76,7 +76,7 @@ def get_latest_price(CMC_API_KEYS, quote_list):
     last_updated = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Email Notification if BTC price drops by 5% in an hour
-    if df.loc['Bitcoin','percent_change_1h'] < -1:
+    if df.loc['Bitcoin','percent_change_1h'] < -2:
     # if True:
         email_notification(smtp_server,sender_email,password,receiver_emails,df)
     
@@ -142,7 +142,7 @@ def email_notification(smtp_server,sender_email,password,receiver_emails,df):
 # current module (__name__) as argument.
 app = Flask(__name__, static_url_path='/static')
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=get_latest_price, trigger="interval", hour=1,
+scheduler.add_job(func=get_latest_price, trigger="interval", hours=1,
                     args = [CMC_API_KEYS,quote_list])
 scheduler.start()
 
