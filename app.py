@@ -29,8 +29,8 @@ quote_list = ['price','percent_change_1h','volume_24h','market_cap']
 smtp_server = "smtp.gmail.com"
 sender_email = "cryptorsanalysis@gmail.com"
 password = "Crypto100RS"
-receiver_emails = ["fungchunhei1234+testing@gmail.com","freemankwokchinhung+testing@gmail.com"]
-# receiver_emails = ["freemankwokchinhung+testing@gmail.com"]
+# receiver_emails = ["fungchunhei1234+testing@gmail.com","freemankwokchinhung+testing@gmail.com"]
+receiver_emails = ["freemankwokchinhung+testing@gmail.com"]
 
 # Functions
 def get_latest_price(CMC_API_KEYS, quote_list):
@@ -84,19 +84,22 @@ def get_latest_price(CMC_API_KEYS, quote_list):
 
 def email_notification(smtp_server,sender_email,password,receiver_emails,df):
 
+    global last_updated
+
     port = 587  # For starttls
 
     message = """\
-    [Alert] BTC has dropped {:.2f}% within the past hour.
+    Subject": [Alert] Crypto RS Analysis
 
     BTC has dropped {0:.2f}% within the past hour.
 
-    Your alert for Crypto Relative Strength Analysis has been triggered. Please visit xxx for more information.
+    Your alert for Crypto Relative Strength Analysis has been triggered. Please visit https://crypto-rs-analysis.herokuapp.com/ for more information.
 
+    Last update: {1}
     --------------------------------------------------------------
     Top performing coins:
 
-    """.format(df.loc['Bitcoin','percent_change_1h'])
+    """.format(df.loc['Bitcoin','percent_change_1h'],last_updated)
 
     s = ""
     for index, (token,values) in enumerate(df.drop('Bitcoin').sort_values('percent_change_1h',ascending=False)[:10].iterrows()):
@@ -125,19 +128,6 @@ def email_notification(smtp_server,sender_email,password,receiver_emails,df):
         server.login(sender_email, password)
         # Send email here
         server.sendmail(sender_email, receiver_emails, message)
-
-        # 2nd email
-        server = smtplib.SMTP(smtp_server,port)
-        server.ehlo() # Can be omitted
-        server.starttls(context=context) # Secure the connection
-        server.ehlo() # Can be omitted
-        # Login
-        server.login(sender_email, password)
-        # Send email here
-        server.sendmail(sender_email, 'freemankwokchinhung+testing@gmail.com',
-            '''\
-            Subject: [Crypto RS Analysis] An email has been sent.
-            ''')
     except Exception as e:
         # Print any error messages to stdout
         print(e)
@@ -152,7 +142,7 @@ def email_notification(smtp_server,sender_email,password,receiver_emails,df):
 # current module (__name__) as argument.
 app = Flask(__name__, static_url_path='/static')
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=get_latest_price, trigger="interval", seconds=30,
+scheduler.add_job(func=get_latest_price, trigger="interval", hour=1,
                     args = [CMC_API_KEYS,quote_list])
 scheduler.start()
 
@@ -199,9 +189,6 @@ if __name__ == '__main__':
   
     # run() method of Flask class runs the application 
     # on the local development server.
-    scheduler.add_job(id = 'Get Price', func=get_latest_price(CMC_API_KEYS,quote_list),
-                        trigger="interval", hours=1)
-    scheduler.start()
     app.run()
 
     # application.run(debug=True)
