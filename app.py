@@ -76,10 +76,10 @@ def get_latest_price(CMC_API_KEYS, quote_list):
 
     last_updated = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    # Email Notification if BTC price drops by 2% in an hour
-    if df.loc['Bitcoin','percent_change_1h'] < -2:
-    # if True:
-        email_notification(smtp_server,sender_email,password,receiver_emails,df)
+    # # Email Notification if BTC price drops by 2% in an hour
+    # if df.loc['Bitcoin','percent_change_1h'] < -2:
+    # # if True:
+    #     email_notification(smtp_server,sender_email,password,receiver_emails,df)
     
     return df
 
@@ -190,8 +190,8 @@ if __name__ == '__main__':
   
     # run() method of Flask class runs the application 
     # on the local development server.
-    # app.run()
+    app.run()
 
     # application.run(debug=True)
-    http_server = WSGIServer(('', 5000), app)
-    http_server.serve_forever()
+    # http_server = WSGIServer(('', 5000), app)
+    # http_server.serve_forever()
